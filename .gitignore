@@ -1,3 +1,11 @@
+# add arquivos que devem ser ignorados
+.idea/
+.vscode/
+tmp/*
+!tmp/.gitkeep
+temp/
+
+
 # Logs
 logs
 *.log
@@ -35,11 +43,13 @@ bower_components
 .lock-wscript
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
+build/
 build/Release
 
 # Dependency directories
 node_modules/
 jspm_packages/
+
 
 # TypeScript v1 declaration files
 typings/
