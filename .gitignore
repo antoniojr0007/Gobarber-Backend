@@ -1,10 +1,10 @@
 # add arquivos que devem ser ignorados
 .idea/
 .vscode/
+yarn-error.log
+ormconfig.json
 tmp/*
 !tmp/.gitkeep
-temp/
-
 
 # Logs
 logs

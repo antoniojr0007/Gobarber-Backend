@@ -1,6 +1,9 @@
 import { getRepository } from 'typeorm';
-import { compareSync } from 'bcryptjs';
+import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+
+import AppError from '../errors/AppError';
+
 import authConfig from '../config/auth';
 
 import User from '../models/User';
@@ -10,25 +13,25 @@ interface Request {
   password: string;
 }
 
-interface Responce {
+interface Response {
   user: User;
   token: string;
 }
 
 class AuthenticateUserService {
-  public async execute({ email, password }: Request): Promise<Responce> {
+  public async execute({ email, password }: Request): Promise<Response> {
     const usersRepository = getRepository(User);
 
     const user = await usersRepository.findOne({ where: { email } });
 
     if (!user) {
-      throw new Error('Incorect Email/Password combination.');
+      throw new AppError('Incorrect email/password combination.', 401);
     }
 
-    const passwordMacthed = compareSync(password, user.password);
+    const passwordMatched = await compare(password, user.password);
 
-    if (!passwordMacthed) {
-      throw new Error('Incorect Email/Password combination.');
+    if (!passwordMatched) {
+      throw new AppError('Incorrect email/password combination.', 401);
     }
 
     const { secret, expiresIn } = authConfig.jwt;
@@ -38,7 +41,10 @@ class AuthenticateUserService {
       expiresIn,
     });
 
-    return { user, token };
+    return {
+      user,
+      token,
+    };
   }
 }
 
